@@ -1,0 +1,43 @@
+name: CodeQL
+
+# SAST (Static Application Security Testing): analiza el código fuente en
+# busca de vulnerabilidades (inyección, XSS, manejo inseguro de datos, etc.).
+# Los hallazgos se ven en la pestaña Security > Code scanning del repositorio.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Cada lunes a las 08:17 UTC, para detectar reglas nuevas aunque no haya cambios.
+    - cron: '17 8 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Análisis CodeQL (SAST)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+          build-mode: none
+          queries: security-extended
+
+      - name: Analizar
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: '/language:javascript-typescript'
