@@ -39,12 +39,11 @@ jobs:
       - name: npm audit
         run: npm audit --audit-level=high
 
-      # gate pendiente: Trivy en modo reporte (exit-code 0). Cambiar a '1' para
-      # que falle el pipeline con hallazgos HIGH/CRITICAL.
+      # Gate: el pipeline falla si Trivy encuentra hallazgos HIGH/CRITICAL.
       - name: Trivy (fs)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .
           severity: HIGH,CRITICAL
-          exit-code: '0'
+          exit-code: '1'

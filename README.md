@@ -78,8 +78,10 @@ Solo disponible con `DATA_MODE=mock`; en otro caso responde 404.
 
 El workflow de GitHub Actions (`.github/workflows/ci.yml`) instala
 dependencias, revisa la sintaxis, corre `npm audit` como gate real
-(falla con vulnerabilidades altas o críticas) y un escaneo Trivy en modo
-reporte (gate pendiente). Quedan 4 vulnerabilidades moderadas en
-dependencias transitivas (qs vía express, minimatch vía nodemon) cuya
-corrección requiere un salto de versión mayor. Dependabot propone
+(falla con vulnerabilidades altas o críticas) y un escaneo Trivy que
+también funciona como gate (falla con hallazgos HIGH o CRITICAL). Las
+dependencias de producción no tienen vulnerabilidades conocidas
+(`npm audit --omit=dev`). Quedan 2 moderadas en `minimatch`, que solo
+llega como dependencia de `nodemon` (desarrollo); corregirlas requiere
+forzar un salto de versión mayor dentro de nodemon. Dependabot propone
 actualizaciones semanales de npm y de GitHub Actions.
